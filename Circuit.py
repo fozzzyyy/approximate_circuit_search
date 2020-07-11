@@ -75,19 +75,7 @@ class Circuit:
         self.gates = []
         for i in range(n_inputs):
             self.gates += [Input(i)]
-        
-        #If modified to take functions with different number of inputs, consider partitioning seed into each gate
-
-        """for column in range(n_columns):
-            for row in range(n_rows):
-                position = (n_rows * column) + row
-                if seed[position] in function_dict.function_dict.keys():
-                    self.gates += [
-                    
-                self.gates += [Gate([self.gates[seed[position * 3]], self.gates[seed[position * 3 + 1]]],
-                                    function_dict.function_dict[seed[position * 3 + 2]], position + self.n_inputs)]
-                                    """
-        
+                
         for i in range(len(seed)):
             if seed[i] in function_dict.function_dict.keys():
                 input_gates = []
@@ -115,7 +103,6 @@ class Circuit:
         for output_gate_index in self.output_seed:
             output_gate = self.gates[output_gate_index]
             output_gate.evaluate()
-            #outputs += [output_gate.position]
             outputs += [int(output_gate.get_output())]
         self.clear()
         return outputs
