@@ -22,9 +22,9 @@ class Function_dict:
 
     #TODO: replace numbers with other symbols to make seeds more readable
     function_dict = {
-        "AND;" : AND,
-        "OR;"  : OR,
-        "XOR;" : XOR,
+        "AND;" : [AND, 2],
+        "OR;"  : [OR, 2],
+        "XOR;" : [XOR, 2],
         #"NAND;": NAND,
         #"NOR;" : NOR,
         #"XNOR;": XNOR

@@ -78,12 +78,24 @@ class Circuit:
         
         #If modified to take functions with different number of inputs, consider partitioning seed into each gate
 
-        for column in range(n_columns):
+        """for column in range(n_columns):
             for row in range(n_rows):
                 position = (n_rows * column) + row
+                if seed[position] in function_dict.function_dict.keys():
+                    self.gates += [
+                    
                 self.gates += [Gate([self.gates[seed[position * 3]], self.gates[seed[position * 3 + 1]]],
                                     function_dict.function_dict[seed[position * 3 + 2]], position + self.n_inputs)]
-
+                                    """
+        
+        for i in range(len(seed)):
+            if seed[i] in function_dict.function_dict.keys():
+                input_gates = []
+                for j in range(i-function_dict.function_dict[seed[i]][1], i):
+                    if type(seed[j]) != int:
+                        raise Exception("Incorrect seed format, integers must be given as the arguments")
+                    input_gates += [self.gates[seed[j]]]
+                self.gates += [Gate(input_gates, function_dict.function_dict[seed[i]][0], len(self.gates))]
 
     def set_inputs(self, inputs):
         for i in range(len(inputs)):
@@ -104,7 +116,7 @@ class Circuit:
             output_gate = self.gates[output_gate_index]
             output_gate.evaluate()
             #outputs += [output_gate.position]
-            outputs += [output_gate.get_output()]
+            outputs += [int(output_gate.get_output())]
         self.clear()
         return outputs
 
@@ -116,28 +128,30 @@ class Circuit:
 if __name__ == "__main__":
     class Function_dict:
         def AND(self, x):
-            return int(x[0] and x[1])
+            return x[0] and x[1]
         def OR(self, x):
-            return int(x[0] or x[1])
-        def NAND(self, x):
-            return int(not x[0] and x[1])
-        def NOR(self, x):
-            return int(not x[0] or x[1])
+            return x[0] or x[1]
         def XOR(self, x):
-            return int(x[0] != x[1])
+            return x[0] != x[1]
+        def NOT(self, x):
+            return not x[0]
+        def NAND(self, x):
+            return self.NOT([self.AND(x)])
+        def NOR(self, x):
+            return self.NOT([self.AND(x)])
         def XNOR(self, x):
-            return int(x[0] == x[1])
+            return self.NOT([self.AND(x)])
         def ANDONENEG(self, x):
-            return int(x[0] and not x[1])
+            return self.NOT([self.AND([x[0], self.NOT(x[1])])])
 
         def __init__(self):
             self.function_dict = {
-                "AND;" : self.AND,
-                "OR;"  : self.OR,
-                "XOR;" : self.XOR,
-                "NAND;": self.NAND,
-                "NOR;" : self.NOR,
-                "XNOR;": self.XNOR
+                "AND;" : [self.AND, 2],
+                "OR;"  : [self.OR, 2],
+                "XOR;" : [self.XOR, 2],
+                "NAND;": [self.NAND, 2],
+                "NOR;" : [self.NOR, 2],
+                "XNOR;": [self.XNOR, 2]
             }
 
     n_inputs = 4
