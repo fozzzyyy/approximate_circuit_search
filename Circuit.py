@@ -111,7 +111,6 @@ class Circuit:
         for gate in self.gates:
             gate.clear()
 
-
 if __name__ == "__main__":
     class Function_dict:
         def AND(self, x):
@@ -168,6 +167,5 @@ if __name__ == "__main__":
             input_b = [int(x) for x in list(format(j, "#0{0}b".format(2 + num_inputs//2))[2:])]
             inputs = input_a + input_b
             x.set_inputs(inputs)
-            #print("    " + str(i) + " * " + str(j) + "    --> " + str(i*j))
             print(str(inputs) + " --> " + str(x.execute()))
 
