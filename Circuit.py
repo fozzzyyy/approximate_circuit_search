@@ -76,14 +76,11 @@ class Circuit:
         for i in range(n_inputs):
             self.gates += [Input(i)]
                 
-        for i in range(len(seed)):
-            if seed[i] in function_dict.function_dict.keys():
-                input_gates = []
-                for j in range(i-function_dict.function_dict[seed[i]][1], i):
-                    if type(seed[j]) != int:
-                        raise Exception("Incorrect seed format, integers must be given as the arguments")
-                    input_gates += [self.gates[seed[j]]]
-                self.gates += [Gate(input_gates, function_dict.function_dict[seed[i]][0], len(self.gates))]
+        for gate in main_seed:
+            input_gates = []
+            for input_gate in gate[:-1]:
+                input_gates.append(self.gates[input_gate])
+            self.gates.append(Gate(input_gates, function_dict.function_dict[gate[-1]], len(self.gates)))
 
     def set_inputs(self, inputs):
         for i in range(len(inputs)):
@@ -132,12 +129,12 @@ if __name__ == "__main__":
 
         def __init__(self):
             self.function_dict = {
-                "AND;" : [self.AND, 2],
-                "OR;"  : [self.OR, 2],
-                "XOR;" : [self.XOR, 2],
-                "NAND;": [self.NAND, 2],
-                "NOR;" : [self.NOR, 2],
-                "XNOR;": [self.XNOR, 2]
+                "AND" : self.AND,
+                "OR"  : self.OR,
+                "XOR" : self.XOR,
+                "NAND": self.NAND,
+                "NOR" : self.NOR,
+                "XNOR": self.XNOR
             }
 
     n_inputs = 4
@@ -145,7 +142,7 @@ if __name__ == "__main__":
     n_columns = 3
     n_rows = 2
 
-    seed = [0, 0, 'OR;', 1, 2, 'NAND;', 2, 2, 'AND;', 5, 2, 'NAND;', 0, 0, 'XOR;', 1, 3, 'NOR;', 1, 4, 5]
+    seed = [[1, 1, 'AND'], [0, 0, 'OR'], [3, 1, 'OR'], [1, 2, 'OR'], [5, 2, 'OR'], [6, 0, 'AND'], 0, 2, 3]
     function_dict = Function_dict()
 
     x = Circuit(n_inputs, n_outputs, n_columns, n_rows, function_dict, seed)

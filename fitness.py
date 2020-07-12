@@ -3,7 +3,6 @@ import random
 import math
 import copy
 
-
 class Function_dict:
     def AND(x):
         return int(x[0] and x[1])
@@ -22,9 +21,9 @@ class Function_dict:
 
     #TODO: replace numbers with other symbols to make seeds more readable
     function_dict = {
-        "AND;" : [AND, 2],
-        "OR;"  : [OR, 2],
-        "XOR;" : [XOR, 2],
+        "AND" : AND,
+        "OR"  : OR,
+        "XOR" : XOR,
         #"NAND;": NAND,
         #"NOR;" : NOR,
         #"XNOR;": XNOR
@@ -64,7 +63,7 @@ class Error_functions:
         return error
 
     def error_probability(self, n_inputs, n_outputs, n_columns, n_rows, function_dict, seed):
-        return self.num_error(self, n_inputs, n_outputs, n_columns, n_rows, function_dict, seed) / 2**n_inputs
+        return self.num_error(n_inputs, n_outputs, n_columns, n_rows, function_dict, seed) / 2**n_inputs
 
     def absolute_error(self, n_inputs, n_outputs, n_columns, n_rows, function_dict, seed):
         circuit = c.Circuit(n_inputs, n_outputs, n_columns, n_rows, function_dict, seed)
@@ -83,7 +82,7 @@ class Error_functions:
         return error
 
     def mean_absolute_error(self, n_inputs, n_outputs, n_columns, n_rows, function_dict, seed):
-        return self.absolute_error(self, n_inputs, n_outputs, n_columns, n_rows, function_dict, seed) / 2**n_inputs
+        return self.absolute_error(n_inputs, n_outputs, n_columns, n_rows, function_dict, seed) / 2**n_inputs
 
     def squared_error(self, n_inputs, n_outputs, n_columns, n_rows, function_dict, seed):
         circuit = c.Circuit(n_inputs, n_outputs, n_columns, n_rows, function_dict, seed)
@@ -99,10 +98,10 @@ class Error_functions:
                 for k in range(n_outputs):
                     output += output_gates[-k-1] * 2**k
                 error += (true_func(i, j) - output)**2
-        return self.error
+        return error
 
     def mean_squared_error(self, n_inputs, n_outputs, n_columns, n_rows, function_dict, seed):
-        return self.squared_error(self, n_inputs, n_outputs, n_columns, n_rows, function_dict, seed) / 2**n_inputs
+        return self.squared_error(n_inputs, n_outputs, n_columns, n_rows, function_dict, seed) / 2**n_inputs
 
     def relative_error(self, n_inputs, n_outputs, n_columns, n_rows, function_dict, seed):
         circuit = c.Circuit(n_inputs, n_outputs, n_columns, n_rows, function_dict, seed)
@@ -126,7 +125,7 @@ class Error_functions:
         return error
 
     def mean_relative_error(self, n_inputs, n_outputs, n_columns, n_rows, function_dict, seed):
-        return relative_error(self, n_inputs, n_outputs, n_columns, n_rows, function_dict, seed) / 2**n_inputs
+        return relative_error(n_inputs, n_outputs, n_columns, n_rows, function_dict, seed) / 2**n_inputs
 
     def worst_case_error(self, n_inputs, n_outputs, n_columns, n_rows, function_dict, seed):
         circuit = c.Circuit(n_inputs, n_outputs, n_columns, n_rows, function_dict, seed)
@@ -183,10 +182,12 @@ def rand_seed_generator(n_inputs, n_outputs, n_columns, n_rows, function_dict):
     seed = []
     for column in range(n_columns):
         for row in range(n_rows):
-            seed.append(random.randrange(0,n_inputs + (n_rows*column)))
-            seed.append(random.randrange(0,n_inputs + (n_rows*column)))
-            seed.append(random.choice(list(function_dict.function_dict.keys())))
-    seed += random.sample(range(len(seed)//3), n_outputs)
+            gate = []
+            gate.append(random.randrange(0,n_inputs + (n_rows*column)))
+            gate.append(random.randrange(0,n_inputs + (n_rows*column)))
+            gate.append(random.choice(list(function_dict.function_dict.keys())))
+            seed.append(gate)
+    seed += random.sample(range(len(seed)), n_outputs)
     return seed
 
 def choose_best(n_inputs, n_outputs, n_columns, n_rows, function_dict, seeds, error_function):
@@ -206,13 +207,14 @@ def mutate(n_inputs, n_outputs, n_columns, n_rows, function_dict, seed):
         max_column = random.randrange(n_columns)
         rand_row = random.randrange(n_rows)
         gate_index = max_column * rand_row
-        #Choose between input a, input b, or function
-        k = random.randrange(3)
+        gate_seed = seed[gate_index]
+        #Choose between all entries in the gate seed        
+        k = random.randrange(len(gate_seed))
         #If not a function
-        if k != 2:
-            seed[gate_index*3 + k] = random.randrange(gate_index - n_rows + n_inputs)
+        if k != len(gate_seed) - 1:
+            seed[gate_index][k] = random.randrange(gate_index - n_rows + n_inputs)
         else:
-            seed[gate_index*3 + k] = random.choice(list(function_dict.function_dict.keys()))
+            seed[gate_index][k] = random.choice(list(function_dict.function_dict.keys()))
     return seeds
         
 def true_func(a, b):
@@ -227,7 +229,7 @@ def main():
     EF = Error_functions()
     error_functions = EF.error_functions
         
-    error_function = "WCRE"
+    error_function = "MSE"
     e_f = error_functions[error_function]
 
     lmda = 5
