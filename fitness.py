@@ -19,7 +19,6 @@ class Function_dict:
     def ANDONENEG(x):
         return int(x[0] and not x[1])
 
-    #TODO: replace numbers with other symbols to make seeds more readable
     function_dict = {
         "AND" : AND,
         "OR"  : OR,
@@ -125,7 +124,7 @@ class Error_functions:
         return error
 
     def mean_relative_error(self, n_inputs, n_outputs, n_columns, n_rows, function_dict, seed):
-        return relative_error(n_inputs, n_outputs, n_columns, n_rows, function_dict, seed) / 2**n_inputs
+        return self.relative_error(n_inputs, n_outputs, n_columns, n_rows, function_dict, seed) / 2**n_inputs
 
     def worst_case_error(self, n_inputs, n_outputs, n_columns, n_rows, function_dict, seed):
         circuit = c.Circuit(n_inputs, n_outputs, n_columns, n_rows, function_dict, seed)
@@ -221,9 +220,9 @@ def true_func(a, b):
         return a + b
 
 def main():
-    n_inputs = 4
-    n_outputs = 3
-    n_columns = 3
+    n_inputs = 8
+    n_outputs = 5
+    n_columns = 8
     n_rows = 2
     function_dict = Function_dict()
     EF = Error_functions()
@@ -245,7 +244,6 @@ def main():
     print(best_seed)
     print(str(c.Circuit(n_inputs, n_outputs, n_columns, n_rows, function_dict, best_seed)))
     print("{0}: {1}".format(error_function, e_f(n_inputs, n_outputs, n_columns, n_rows, function_dict, best_seed)))
-
 
 if __name__ == "__main__":
     main()

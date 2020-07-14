@@ -137,31 +137,30 @@ if __name__ == "__main__":
                 "XNOR": self.XNOR
             }
 
-    n_inputs = 4
-    n_outputs = 3
-    n_columns = 3
-    n_rows = 2
+    n_inputs = 8
+    n_outputs = 5
+    n_columns = 18
+    n_rows = 1
 
-    seed = [[1, 1, 'AND'], [0, 0, 'OR'], [3, 1, 'OR'], [1, 2, 'OR'], [5, 2, 'OR'], [6, 0, 'AND'], 0, 2, 3]
+    seed = [[3, 7, "XOR"], [3, 7, "AND"], [2, 6, "XOR"], [2, 6, "AND"], [1, 5, "XOR"], [1, 5, "AND"], [0, 4, "XOR"], [0, 4, "AND"],
+            [9, 10, "AND"], [9, 10, "XOR"],
+            [11, 16, "OR"],
+            [12, 18, "AND"], [12, 18, "XOR"],
+            [13, 19, "OR"],
+            [14, 21, "AND"], [14, 21, "XOR"],
+            [15, 22, "OR"],
+            24,23,20,17,8
+           ]
     function_dict = Function_dict()
 
     x = Circuit(n_inputs, n_outputs, n_columns, n_rows, function_dict, seed)
 
     print(str(x))
 
-    ##input_list = [list(tup)[::-1] for tup in itertools.product([0, 1], repeat=4)]
-    ##
-    ##
-    ##for i in input_list:
-    ##    x.set_inputs(i)
-    ##    print(str(i) + " --> " + str(x.execute()))
-
-    num_inputs = 4
-
-    for i in range(2**(num_inputs//2)):
-        for j in range(2**(num_inputs//2)):
-            input_a = [int(x) for x in list(format(i, "#0{0}b".format(2 + num_inputs//2))[2:])]
-            input_b = [int(x) for x in list(format(j, "#0{0}b".format(2 + num_inputs//2))[2:])]
+    for i in range(2**(n_inputs//2)):
+        for j in range(2**(n_inputs//2)):
+            input_a = [int(x) for x in list(format(i, "#0{0}b".format(2 + n_inputs//2))[2:])]
+            input_b = [int(x) for x in list(format(j, "#0{0}b".format(2 + n_inputs//2))[2:])]
             inputs = input_a + input_b
             x.set_inputs(inputs)
             print(str(inputs) + " --> " + str(x.execute()))
