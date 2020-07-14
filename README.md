@@ -11,10 +11,12 @@ We can represent a given circuit using a chromosome:
 Z. Vasicek and L. Sekanina, "Evolutionary Approach to Approximate Digital Circuits Design" in IEEE Transactions on Evolutionary Computation, vol. 19, no. 3, pp. 432-444, June 2015. doi: 10.1109/TEVC.2014.2336175
 (pages 435-436)
 
-##Circuit.py
+## Circuit.py
+
 This file takes defines the Gate and Circuit classes.
 
-###Circuit parameters
+### Circuit parameters
+
 * n_inputs: the number of input Gates in the Circuit, often referred to in literature as n_i
 * n_outputs: the number of outputs that will be returned after executing the gate, often referred to in literature as n_o
 * n_columns: the number of columns that the Gates will be arranged into, often referred to in literature as n_c
@@ -24,7 +26,8 @@ This file takes defines the Gate and Circuit classes.
 
 Note that the total number of Gates in the Circuit will be n_inputs + (n_columns \* n_rows).
 
-####function_dict
+#### function_dict
+
 Circuit.py contains an example of the Function_dict class.
 
 Each function takes a list of inputs as its parameters, and returns some value.
@@ -36,6 +39,7 @@ Note: this dictionary **must** be named self.function_dict
 In the body of your program, create an object of this class and pass it to the Circuit constructor
 
 ####chromosome
+
 The valid format for a chromosome is:
 
 [G_1, ..., G_m, o_1, ..., o_n]
