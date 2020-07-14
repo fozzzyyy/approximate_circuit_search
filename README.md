@@ -38,7 +38,7 @@ Note: this dictionary **must** be named self.function_dict
 
 In the body of your program, create an object of this class and pass it to the Circuit constructor
 
-####chromosome
+#### chromosome
 
 The valid format for a chromosome is:
 
