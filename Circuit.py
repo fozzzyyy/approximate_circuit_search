@@ -104,27 +104,27 @@ class Circuit:
         string = ""
         for gate in self.gates:
             string += str(gate) + "\n"
-        string += "Outputs are: " + str(self.output_seed)
+        string += "Outputs are: " + str(self.output_chromosome)
         return string
     
-    def __init__(self, n_inputs, n_outputs, n_columns, n_rows, function_dict, seed):
+    def __init__(self, n_inputs, n_outputs, n_columns, n_rows, function_dict, chromosome):
         """Constructor for Circuit class."""
-        main_seed = seed[:-n_outputs]
-        self.output_seed = seed[-n_outputs:]
+        main_chromosome = chromosome[:-n_outputs]
+        self.output_chromosome = chromosome[-n_outputs:]
         self.n_inputs = n_inputs
         self.n_outputs = n_outputs
         self.n_columns = n_columns
         self.n_rows = n_rows
         self.function_dict = function_dict
-        self.seed = seed
+        self.chromosome = chromosome
 
         #Creates the input Gates
         self.gates = []
         for i in range(n_inputs):
             self.gates += [Input(i)]
 
-        #Creates a Gate for each gate in the seed   
-        for gate in main_seed:
+        #Creates a Gate for each gate in the chromosome   
+        for gate in main_chromosome:
             #All but the last element of each list refers to another Gate in the Circuit
             input_gates = []
             for input_gate in gate[:-1]:
@@ -146,8 +146,8 @@ class Circuit:
     def execute(self):
         """Evaluate all needed gates and reutrn necessary outputs."""
         outputs = []
-        #Evaluate each Gate that is listed in the output portion of the seed
-        for output_gate_index in self.output_seed:
+        #Evaluate each Gate that is listed in the output portion of the chromosome
+        for output_gate_index in self.output_chromosome:
             output_gate = self.gates[output_gate_index]
             output_gate.evaluate()
             #Add this output to the list of outputs
@@ -184,7 +184,7 @@ if __name__ == "__main__":
         #to use self, and so will not be able to call each other
         def __init__(self):
             #The keys correspond to the last element of each sublist in
-            #the seed
+            #the chromosome
             self.function_dict = {
                 "AND" : self.AND,
                 "OR"  : self.OR,
@@ -199,13 +199,13 @@ if __name__ == "__main__":
     n_outputs = 3
     n_columns = 3
     n_rows = 2
-    seed = [[1, 1, 'AND'], [0, 0, 'OR'], [3, 1, 'OR'], [1, 2, 'OR'], [5, 2, 'OR'], [6, 0, 'AND'], 0, 2, 3]
+    chromosome = [[1, 1, 'AND'], [0, 0, 'OR'], [3, 1, 'OR'], [1, 2, 'OR'], [5, 2, 'OR'], [6, 0, 'AND'], 0, 2, 3]
     function_dict = Function_dict()
 
     #Creates a Circuit using the parameters we just defined
     #From here on, the only modification of the Circuit should be through
     #assigning the inputs and evaluating the output nodes
-    x = Circuit(n_inputs, n_outputs, n_columns, n_rows, function_dict, seed)
+    x = Circuit(n_inputs, n_outputs, n_columns, n_rows, function_dict, chromosome)
 
     #Example printing the string of a Circuit
     print(str(x))
