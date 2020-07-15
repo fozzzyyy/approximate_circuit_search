@@ -143,7 +143,7 @@ class Circuit:
         for i in range(len(inputs)):
             self.gates[i].set_output(inputs[i])
 
-    def execute(self):
+    def execute_without_clear(self):
         """Evaluate all needed gates and reutrn necessary outputs."""
         outputs = []
         #Evaluate each Gate that is listed in the output portion of the chromosome
@@ -152,13 +152,17 @@ class Circuit:
             output_gate.evaluate()
             #Add this output to the list of outputs
             outputs += [int(output_gate.get_output())]
-        self.clear()
         return outputs
 
     def clear(self):
         """Set the evaluated flag of each Gate to False."""
         for gate in self.gates:
             gate.clear()
+
+    def execute(self):
+        outputs = self.execute_without_clear()
+        self.clear()
+        return outputs
 
 if __name__ == "__main__":
     #Example Function_dict class
@@ -222,4 +226,3 @@ if __name__ == "__main__":
             inputs = input_a + input_b
             x.set_inputs(inputs)
             print(str(inputs) + " --> " + str(x.execute()))
-
