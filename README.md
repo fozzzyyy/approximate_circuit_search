@@ -8,7 +8,7 @@ In this system we can represent digital circuits as a graph, and is called Carte
 
 We can represent a given circuit using a chromosome:
 
-Z. Vasicek and L. Sekanina, "Evolutionary Approach to Approximate Digital Circuits Design" in IEEE Transactions on Evolutionary Computation, vol. 19, no. 3, pp. 432-444, June 2015. doi: 10.1109/TEVC.2014.2336175
+Z. Vasicek and L. Sekanina, "Evolutionary Approach to Approximate Digital Circuits Design" in IEEE Transactions on Evolutionary Computation, vol. 19, no. 3, pp. 432-444, June 2015. doi: [10.1109/TEVC.2014.2336175](https://dx.doi.org/10.1109/TEVC.2014.2336175)
 (pages 435-436)
 
 ## Circuit.py
