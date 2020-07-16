@@ -207,8 +207,10 @@ def get_phenotype(n_inputs, n_outputs, n_columns, n_rows, function_dict, chromos
             phenotype.append(i)
     return phenotype
 
-def mutate(n_inputs, n_outputs, n_columns, n_rows, function_dict, chromosome):
-    chromosomes = [copy.deepcopy(chromosome), copy.deepcopy(chromosome), copy.deepcopy(chromosome), copy.deepcopy(chromosome), copy.deepcopy(chromosome), copy.deepcopy(chromosome)]
+def mutate(n_inputs, n_outputs, n_columns, n_rows, function_dict, chromosome, lmbda):
+    chromosomes = [chromosome]
+    for i in range(lmbda // 2):
+        chromosomes.append(copy.deepcopy(chromosome))
     phenotype = get_phenotype(n_inputs, n_outputs, n_columns, n_rows, function_dict, chromosome)
     #Iterate over chromosome copies
     for chromosome in chromosomes[1:]:
@@ -233,6 +235,8 @@ def mutate(n_inputs, n_outputs, n_columns, n_rows, function_dict, chromosome):
             else:
                 k = random.randrange(len(chromosome) - n_outputs, len(chromosome))
                 chromosome[k] = random.randrange(n_inputs + len(chromosome) - n_outputs)
+    for i in range(len(chromosomes), 1+lmbda):
+        chromosomes.append(rand_chromosome_generator(n_inputs, n_outputs, n_columns, n_rows, function_dict))
     return chromosomes
         
 def true_func(a, b):
@@ -250,16 +254,16 @@ def main():
     error_function = "MSE"
     e_f = error_functions[error_function]
 
-    lmda = 5
+    lmbda = 7
 
     best_chromosome = []
     chromosomes = []
-    for i in range(1+lmda):
+    for i in range(1+lmbda):
         chromosomes += [rand_chromosome_generator(n_inputs, n_outputs, n_columns, n_rows, function_dict)]
-    for i in range(50):
+    for i in range(1000):
         best_chromosome = choose_best(n_inputs, n_outputs, n_columns, n_rows, function_dict, chromosomes, e_f)
-        chromosomes = mutate(n_inputs, n_outputs, n_columns, n_rows, function_dict, best_chromosome)
-
+        chromosomes = mutate(n_inputs, n_outputs, n_columns, n_rows, function_dict, best_chromosome, lmbda)
+        
     print(best_chromosome)
     print(str(c.Circuit(n_inputs, n_outputs, n_columns, n_rows, function_dict, best_chromosome)))
     print("{0}: {1}".format(error_function, e_f(n_inputs, n_outputs, n_columns, n_rows, function_dict, best_chromosome)))
