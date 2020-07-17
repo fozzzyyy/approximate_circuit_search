@@ -1,35 +1,10 @@
-import __init__ as c
+import cgp_circuit.circuit as c
 import random
 import math
 import copy
 
-class Function_dict:
-    def AND(x):
-        return int(x[0] and x[1])
-    def OR(x):
-        return int(x[0] or x[1])
-    def NAND(x):
-        return int(not x[0] and x[1])
-    def NOR(x):
-        return int(not x[0] or x[1])
-    def XOR(x):
-        return int(x[0] != x[1])
-    def XNOR(x):
-        return int(x[0] == x[1])
-    def ANDONENEG(x):
-        return int(x[0] and not x[1])
-
-    function_dict = {
-        "AND" : AND,
-        "OR"  : OR,
-        "XOR" : XOR,
-        #"NAND;": NAND,
-        #"NOR;" : NOR,
-        #"XNOR;": XNOR
-    }
-
 class Error_functions:
-    def hamming_distance(self, n_inputs, n_outputs, n_columns, n_rows, function_dict, chromosome):
+    def hamming_distance(self, n_inputs, n_outputs, n_columns, n_rows, function_dict, chromosome, true_func):
         circuit = c.Circuit(n_inputs, n_outputs, n_columns, n_rows, function_dict, chromosome)
         error = 0
         for i in range(2**(n_inputs//2)):
@@ -44,7 +19,7 @@ class Error_functions:
                     error += true_outputs[k] ^ output_gates[k]
         return error
 
-    def num_error(self, n_inputs, n_outputs, n_columns, n_rows, function_dict, chromosome):
+    def num_error(self, n_inputs, n_outputs, n_columns, n_rows, function_dict, chromosome, true_func):
         circuit = c.Circuit(n_inputs, n_outputs, n_columns, n_rows, function_dict, chromosome)
         error = 0
         for i in range(2**(n_inputs//2)):
@@ -61,10 +36,10 @@ class Error_functions:
                     error += 1
         return error
 
-    def error_probability(self, n_inputs, n_outputs, n_columns, n_rows, function_dict, chromosome):
-        return self.num_error(n_inputs, n_outputs, n_columns, n_rows, function_dict, chromosome) / 2**n_inputs
+    def error_probability(self, n_inputs, n_outputs, n_columns, n_rows, function_dict, chromosome, true_func):
+        return self.num_error(n_inputs, n_outputs, n_columns, n_rows, function_dict, chromosome, true_func) / 2**n_inputs
 
-    def absolute_error(self, n_inputs, n_outputs, n_columns, n_rows, function_dict, chromosome):
+    def absolute_error(self, n_inputs, n_outputs, n_columns, n_rows, function_dict, chromosome, true_func):
         circuit = c.Circuit(n_inputs, n_outputs, n_columns, n_rows, function_dict, chromosome)
         error = 0
         for i in range(2**(n_inputs//2)):
@@ -80,10 +55,10 @@ class Error_functions:
                 error += abs(true_func(i, j) - output)
         return error
 
-    def mean_absolute_error(self, n_inputs, n_outputs, n_columns, n_rows, function_dict, chromosome):
-        return self.absolute_error(n_inputs, n_outputs, n_columns, n_rows, function_dict, chromosome) / 2**n_inputs
+    def mean_absolute_error(self, n_inputs, n_outputs, n_columns, n_rows, function_dict, chromosome, true_func):
+        return self.absolute_error(n_inputs, n_outputs, n_columns, n_rows, function_dict, chromosome. true_func) / 2**n_inputs
 
-    def squared_error(self, n_inputs, n_outputs, n_columns, n_rows, function_dict, chromosome):
+    def squared_error(self, n_inputs, n_outputs, n_columns, n_rows, function_dict, chromosome, true_func):
         circuit = c.Circuit(n_inputs, n_outputs, n_columns, n_rows, function_dict, chromosome)
         error = 0
         for i in range(2**(n_inputs//2)):
@@ -99,10 +74,10 @@ class Error_functions:
                 error += (true_func(i, j) - output)**2
         return error
 
-    def mean_squared_error(self, n_inputs, n_outputs, n_columns, n_rows, function_dict, chromosome):
-        return self.squared_error(n_inputs, n_outputs, n_columns, n_rows, function_dict, chromosome) / 2**n_inputs
+    def mean_squared_error(self, n_inputs, n_outputs, n_columns, n_rows, function_dict, chromosome, true_func):
+        return self.squared_error(n_inputs, n_outputs, n_columns, n_rows, function_dict, chromosome, true_func) / 2**n_inputs
 
-    def relative_error(self, n_inputs, n_outputs, n_columns, n_rows, function_dict, chromosome):
+    def relative_error(self, n_inputs, n_outputs, n_columns, n_rows, function_dict, chromosome, true_func):
         circuit = c.Circuit(n_inputs, n_outputs, n_columns, n_rows, function_dict, chromosome)
         error = 0
         for i in range(2**(n_inputs//2)):
@@ -123,10 +98,10 @@ class Error_functions:
                     error += this_error
         return error
 
-    def mean_relative_error(self, n_inputs, n_outputs, n_columns, n_rows, function_dict, chromosome):
-        return self.relative_error(n_inputs, n_outputs, n_columns, n_rows, function_dict, chromosome) / 2**n_inputs
+    def mean_relative_error(self, n_inputs, n_outputs, n_columns, n_rows, function_dict, chromosome, true_func):
+        return self.relative_error(n_inputs, n_outputs, n_columns, n_rows, function_dict, chromosome, true_func) / 2**n_inputs
 
-    def worst_case_error(self, n_inputs, n_outputs, n_columns, n_rows, function_dict, chromosome):
+    def worst_case_error(self, n_inputs, n_outputs, n_columns, n_rows, function_dict, chromosome, true_func):
         circuit = c.Circuit(n_inputs, n_outputs, n_columns, n_rows, function_dict, chromosome)
         error = 0
         for i in range(2**(n_inputs//2)):
@@ -145,7 +120,7 @@ class Error_functions:
                     error = this_error
         return error
 
-    def worst_case_relative_error(self, n_inputs, n_outputs, n_columns, n_rows, function_dict, chromosome):
+    def worst_case_relative_error(self, n_inputs, n_outputs, n_columns, n_rows, function_dict, chromosome, true_func):
         circuit = c.Circuit(n_inputs, n_outputs, n_columns, n_rows, function_dict, chromosome)
         error = 0
         for i in range(2**(n_inputs//2)):
@@ -189,10 +164,10 @@ def rand_chromosome_generator(n_inputs, n_outputs, n_columns, n_rows, function_d
     chromosome += random.sample(range(len(chromosome)), n_outputs)
     return chromosome
 
-def choose_best(n_inputs, n_outputs, n_columns, n_rows, function_dict, chromosomes, error_function):
+def choose_best(n_inputs, n_outputs, n_columns, n_rows, function_dict, chromosomes, error_function, true_func):
     best_weight = math.inf
     for chromosome in chromosomes:
-        weight = error_function(n_inputs, n_outputs, n_columns, n_rows, function_dict, chromosome)
+        weight = error_function(n_inputs, n_outputs, n_columns, n_rows, function_dict, chromosome, true_func)
         if weight <= best_weight:
             best_chromosome = copy.deepcopy(chromosome)
             best_weight = weight
@@ -238,35 +213,3 @@ def mutate(n_inputs, n_outputs, n_columns, n_rows, function_dict, chromosome, lm
     for i in range(len(chromosomes), 1+lmbda):
         chromosomes.append(rand_chromosome_generator(n_inputs, n_outputs, n_columns, n_rows, function_dict))
     return chromosomes
-        
-def true_func(a, b):
-        return a + b
-
-def main():
-    n_inputs = 8
-    n_outputs = 5
-    n_columns = 8
-    n_rows = 2
-    function_dict = Function_dict()
-    EF = Error_functions()
-    error_functions = EF.error_functions
-        
-    error_function = "MSE"
-    e_f = error_functions[error_function]
-
-    lmbda = 7
-
-    best_chromosome = []
-    chromosomes = []
-    for i in range(1+lmbda):
-        chromosomes += [rand_chromosome_generator(n_inputs, n_outputs, n_columns, n_rows, function_dict)]
-    for i in range(1000):
-        best_chromosome = choose_best(n_inputs, n_outputs, n_columns, n_rows, function_dict, chromosomes, e_f)
-        chromosomes = mutate(n_inputs, n_outputs, n_columns, n_rows, function_dict, best_chromosome, lmbda)
-        
-    print(best_chromosome)
-    print(str(c.Circuit(n_inputs, n_outputs, n_columns, n_rows, function_dict, best_chromosome)))
-    print("{0}: {1}".format(error_function, e_f(n_inputs, n_outputs, n_columns, n_rows, function_dict, best_chromosome)))
-
-if __name__ == "__main__":
-    main()
