@@ -1,4 +1,4 @@
-import Circuit as c
+import __init__ as c
 import random
 import math
 import copy
