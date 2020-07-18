@@ -179,7 +179,7 @@ def get_phenotype(n_inputs, n_outputs, n_columns, n_rows, function_dict, chromos
     phenotype = []
     for i in range(len(chromosome) - n_outputs):
         if circuit.gates[i + n_inputs].evaluated:
-            phenotype.append(i)
+            phenotype.append(i + n_inputs)
     return phenotype
 
 def mutate(n_inputs, n_outputs, n_columns, n_rows, function_dict, chromosome, lmbda, rand):
@@ -195,8 +195,8 @@ def mutate(n_inputs, n_outputs, n_columns, n_rows, function_dict, chromosome, lm
             i = random.randrange(len(phenotype) + n_outputs)
             #If we choose a gate
             if i < len(phenotype):
-                gate_chromosome = chromosome[phenotype[i]]
-                max_column = (phenotype[i]) // n_rows
+                gate_chromosome = chromosome[phenotype[i] - n_inputs]
+                max_column = (phenotype[i] - n_inputs) // n_rows
                 #Choose between all entries in the gate chromosome 
                 k = random.randrange(len(gate_chromosome))
                 #If not the function

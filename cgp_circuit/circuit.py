@@ -55,6 +55,7 @@ class Gate:
                 gate.evaluated = True
             function_inputs += [gate.get_output()]
         self.set_output(self.function(function_inputs))
+        self.evaluated = True
 
     #Getter and setter methods
     def set_output(self, output):
@@ -151,7 +152,7 @@ class Circuit:
             output_gate = self.gates[output_gate_index]
             output_gate.evaluate()
             #Add this output to the list of outputs
-            outputs += [int(output_gate.get_output())]
+            outputs.append(int(output_gate.get_output()))
         return outputs
 
     def clear(self):
