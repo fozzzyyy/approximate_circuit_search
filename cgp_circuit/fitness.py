@@ -1,4 +1,4 @@
-import cgp_circuit.circuit as c
+from . import circuit as c
 import random
 import math
 import copy
@@ -182,9 +182,9 @@ def get_phenotype(n_inputs, n_outputs, n_columns, n_rows, function_dict, chromos
             phenotype.append(i)
     return phenotype
 
-def mutate(n_inputs, n_outputs, n_columns, n_rows, function_dict, chromosome, lmbda):
+def mutate(n_inputs, n_outputs, n_columns, n_rows, function_dict, chromosome, lmbda, rand):
     chromosomes = [chromosome]
-    for i in range(lmbda // 2):
+    for i in range(lmbda):
         chromosomes.append(copy.deepcopy(chromosome))
     phenotype = get_phenotype(n_inputs, n_outputs, n_columns, n_rows, function_dict, chromosome)
     #Iterate over chromosome copies
@@ -210,6 +210,6 @@ def mutate(n_inputs, n_outputs, n_columns, n_rows, function_dict, chromosome, lm
             else:
                 k = random.randrange(len(chromosome) - n_outputs, len(chromosome))
                 chromosome[k] = random.randrange(n_inputs + len(chromosome) - n_outputs)
-    for i in range(len(chromosomes), 1+lmbda):
+    for i in range(rand):
         chromosomes.append(rand_chromosome_generator(n_inputs, n_outputs, n_columns, n_rows, function_dict))
     return chromosomes

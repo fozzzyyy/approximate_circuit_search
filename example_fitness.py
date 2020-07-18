@@ -41,7 +41,8 @@ def main():
     error_function = "MSE"
     e_f = error_functions[error_function]
 
-    lmbda = 7
+    lmbda = 3
+    rand = 3
 
     best_chromosome = []
     chromosomes = []
@@ -49,7 +50,7 @@ def main():
         chromosomes += [f.rand_chromosome_generator(n_inputs, n_outputs, n_columns, n_rows, function_dict)]
     for i in range(100):
         best_chromosome = f.choose_best(n_inputs, n_outputs, n_columns, n_rows, function_dict, chromosomes, e_f, true_func)
-        chromosomes = f.mutate(n_inputs, n_outputs, n_columns, n_rows, function_dict, best_chromosome, lmbda)
+        chromosomes = f.mutate(n_inputs, n_outputs, n_columns, n_rows, function_dict, best_chromosome, lmbda, rand)
         
     print(best_chromosome)
     print(str(c.Circuit(n_inputs, n_outputs, n_columns, n_rows, function_dict, best_chromosome)))
