@@ -55,7 +55,7 @@ def main():
 
     best_chromosome = []
     chromosomes = []
-    for i in range(1+lmbda):
+    for i in range(1 + lmbda + rand):
         chromosomes += [f.rand_chromosome_generator(n_inputs, n_outputs, n_columns, n_rows, function_dict)]
     for i in range(100):
         best_chromosome = f.choose_best(n_inputs, n_outputs, n_columns, n_rows, function_dict, chromosomes, e_f, true_func)
