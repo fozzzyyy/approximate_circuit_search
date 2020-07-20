@@ -1,4 +1,4 @@
-import cgp_circuit as c
+import cgp_circuit.circuit as c
 
 def main():
     #Example Function_dict class
