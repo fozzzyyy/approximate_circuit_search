@@ -1,22 +1,30 @@
 import cgp_circuit.circuit as c
 import cgp_circuit.fitness as f
 
+
 def true_func(a, b):
         return a + b
+
 
 class Function_dict:
     def AND(x):
         return int(x[0] and x[1])
+
     def OR(x):
         return int(x[0] or x[1])
+
     def NAND(x):
         return int(not x[0] and x[1])
+
     def NOR(x):
         return int(not x[0] or x[1])
+
     def XOR(x):
         return int(x[0] != x[1])
+
     def XNOR(x):
         return int(x[0] == x[1])
+
     def ANDONENEG(x):
         return int(x[0] and not x[1])
 
@@ -24,10 +32,11 @@ class Function_dict:
         "AND" : AND,
         "OR"  : OR,
         "XOR" : XOR,
-        #"NAND;": NAND,
-        #"NOR;" : NOR,
-        #"XNOR;": XNOR
+        # "NAND;": NAND,
+        # "NOR;" : NOR,
+        # "XNOR;": XNOR
     }
+
 
 def main():
     n_inputs = 8
@@ -55,6 +64,7 @@ def main():
     print(best_chromosome)
     print(str(c.Circuit(n_inputs, n_outputs, n_columns, n_rows, function_dict, best_chromosome)))
     print("{0}: {1}".format(error_function, e_f(n_inputs, n_outputs, n_columns, n_rows, function_dict, best_chromosome, true_func)))
+
 
 if __name__ == "__main__":
     main()

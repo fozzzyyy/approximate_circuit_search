@@ -3,6 +3,7 @@ import random
 import math
 import copy
 
+
 class Error_functions:
     def hamming_distance(self, n_inputs, n_outputs, n_columns, n_rows, function_dict, chromosome, true_func):
         circuit = c.Circuit(n_inputs, n_outputs, n_columns, n_rows, function_dict, chromosome)
@@ -140,17 +141,17 @@ class Error_functions:
                 if this_error > error:
                     error = this_error
 
-
     def __init__(self):
         self.error_functions = {
-            "HD"   : self.hamming_distance,
-            "EP"   : self.error_probability,
-            "MAE"  : self.mean_absolute_error,
-            "MSE"  : self.mean_squared_error,
-            "MRE"  : self.mean_relative_error,
-            "WCE"  : self.worst_case_error,
-            "WCRE" : self.worst_case_relative_error,
+            "HD": self.hamming_distance,
+            "EP": self.error_probability,
+            "MAE": self.mean_absolute_error,
+            "MSE": self.mean_squared_error,
+            "MRE": self.mean_relative_error,
+            "WCE": self.worst_case_error,
+            "WCRE": self.worst_case_relative_error,
         }
+
 
 def rand_chromosome_generator(n_inputs, n_outputs, n_columns, n_rows, function_dict):
     chromosome = []
@@ -164,6 +165,7 @@ def rand_chromosome_generator(n_inputs, n_outputs, n_columns, n_rows, function_d
     chromosome += random.sample(range(len(chromosome)), n_outputs)
     return chromosome
 
+
 def choose_best(n_inputs, n_outputs, n_columns, n_rows, function_dict, chromosomes, error_function, true_func):
     best_weight = math.inf
     for chromosome in chromosomes:
@@ -172,6 +174,7 @@ def choose_best(n_inputs, n_outputs, n_columns, n_rows, function_dict, chromosom
             best_chromosome = copy.deepcopy(chromosome)
             best_weight = weight
     return best_chromosome
+
 
 def get_phenotype(n_inputs, n_outputs, n_columns, n_rows, function_dict, chromosome):
     circuit = c.Circuit(n_inputs, n_outputs, n_columns, n_rows, function_dict, chromosome)
@@ -182,30 +185,31 @@ def get_phenotype(n_inputs, n_outputs, n_columns, n_rows, function_dict, chromos
             phenotype.append(i + n_inputs)
     return phenotype
 
+
 def mutate(n_inputs, n_outputs, n_columns, n_rows, function_dict, chromosome, lmbda, rand):
     chromosomes = [chromosome]
     for i in range(lmbda):
         chromosomes.append(copy.deepcopy(chromosome))
     phenotype = get_phenotype(n_inputs, n_outputs, n_columns, n_rows, function_dict, chromosome)
-    #Iterate over chromosome copies
+    # Iterate over chromosome copies
     for chromosome in chromosomes[1:]:
-        #Change 3 calues in each chromosome
+        # Change 3 calues in each chromosome
         for j in range(3):
-            #Choose a random gate/output that is in the phenotype of the chromosome
+            # Choose a random gate/output that is in the phenotype of the chromosome
             i = random.randrange(len(phenotype) + n_outputs)
-            #If we choose a gate
+            # If we choose a gate
             if i < len(phenotype):
                 gate_chromosome = chromosome[phenotype[i] - n_inputs]
                 max_column = (phenotype[i] - n_inputs) // n_rows
-                #Choose between all entries in the gate chromosome 
+                # Choose between all entries in the gate chromosome
                 k = random.randrange(len(gate_chromosome))
-                #If not the function
+                # If not the function
                 if k != len(gate_chromosome) - 1:
-                    #Change input connection to some gate in a previous column
+                    # Change input connection to some gate in a previous column
                     gate_chromosome[k] = random.randrange(n_inputs + max_column * n_rows)
-                #If the function is chosen
+                # If the function is chosen
                 else:
-                    #Change gate function to something from the function dictionary
+                    # Change gate function to something from the function dictionary
                     gate_chromosome[k] = random.choice(list(function_dict.function_dict.keys()))
             else:
                 k = random.randrange(len(chromosome) - n_outputs, len(chromosome))
