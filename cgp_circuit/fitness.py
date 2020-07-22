@@ -191,9 +191,13 @@ def mutate(n_inputs, n_outputs, n_columns, n_rows, function_dict, chromosome, lm
     for i in range(lmbda):
         chromosomes.append(copy.deepcopy(chromosome))
     phenotype = get_phenotype(n_inputs, n_outputs, n_columns, n_rows, function_dict, chromosome)
+
+    # Remove this line to only modify gates in phenotype
+    phenotype = list(range(n_inputs, n_inputs + n_columns * n_rows))
+
     # Iterate over chromosome copies
     for chromosome in chromosomes[1:]:
-        # Change 3 calues in each chromosome
+        # Change 3 values in each chromosome
         for j in range(3):
             # Choose a random gate/output that is in the phenotype of the chromosome
             i = random.randrange(len(phenotype) + n_outputs)
