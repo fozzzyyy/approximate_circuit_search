@@ -1,4 +1,4 @@
-input_lengths = 8
+input_lengths = 4
 
 chromosome = []
 
@@ -30,6 +30,11 @@ else:
     for i in range(input_lengths - 1):
         chromosome.append(length + 2 * input_lengths - 5 - i * 6)
     chromosome.append(2 * input_lengths)
+
+print("n_inputs = {0}".format(2 * input_lengths))
+print("n_outputs = {0}".format(1 + input_lengths))
+print("n_columns = {0}".format(2 * input_lengths - 1))
+print("n_rows = 3")
 
 print(chromosome)
 
