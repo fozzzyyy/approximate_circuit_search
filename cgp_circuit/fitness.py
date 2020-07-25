@@ -10,8 +10,8 @@ class Error_functions:
         error = 0
         for i in range(2**(n_inputs//2)):
             for j in range(2**(n_inputs//2)):
-                input_a = [int(x) for x in list(format(i, "#0{0}b".format(2 + n_inputs//2))[2:])]
-                input_b = [int(x) for x in list(format(j, "#0{0}b".format(2 + n_inputs//2))[2:])]
+                input_a = int_to_bin_list(i, n_inputs//2)
+                input_b = int_to_bin_list(j, n_inputs//2)
                 inputs = input_a + input_b
                 circuit.set_inputs(inputs)
                 output_gates = circuit.execute()
@@ -25,8 +25,8 @@ class Error_functions:
         error = 0
         for i in range(2**(n_inputs//2)):
             for j in range(2**(n_inputs//2)):
-                input_a = [int(x) for x in list(format(i, "#0{0}b".format(2 + n_inputs//2))[2:])]
-                input_b = [int(x) for x in list(format(j, "#0{0}b".format(2 + n_inputs//2))[2:])]
+                input_a = int_to_bin_list(i, n_inputs//2)
+                input_b = int_to_bin_list(j, n_inputs//2)
                 inputs = input_a + input_b
                 circuit.set_inputs(inputs)
                 output_gates = circuit.execute()
@@ -45,8 +45,8 @@ class Error_functions:
         error = 0
         for i in range(2**(n_inputs//2)):
             for j in range(2**(n_inputs//2)):
-                input_a = [int(x) for x in list(format(i, "#0{0}b".format(2 + n_inputs//2))[2:])]
-                input_b = [int(x) for x in list(format(j, "#0{0}b".format(2 + n_inputs//2))[2:])]
+                input_a = int_to_bin_list(i, n_inputs//2)
+                input_b = int_to_bin_list(j, n_inputs//2)
                 inputs = input_a + input_b
                 circuit.set_inputs(inputs)
                 output_gates = circuit.execute()
@@ -57,15 +57,15 @@ class Error_functions:
         return error
 
     def mean_absolute_error(self, n_inputs, n_outputs, n_columns, n_rows, function_dict, chromosome, true_func):
-        return self.absolute_error(n_inputs, n_outputs, n_columns, n_rows, function_dict, chromosome. true_func) / 2**n_inputs
+        return self.absolute_error(n_inputs, n_outputs, n_columns, n_rows, function_dict, chromosome, true_func) / 2**n_inputs
 
     def squared_error(self, n_inputs, n_outputs, n_columns, n_rows, function_dict, chromosome, true_func):
         circuit = c.Circuit(n_inputs, n_outputs, n_columns, n_rows, function_dict, chromosome)
         error = 0
         for i in range(2**(n_inputs//2)):
             for j in range(2**(n_inputs//2)):
-                input_a = [int(x) for x in list(format(i, "#0{0}b".format(2 + n_inputs//2))[2:])]
-                input_b = [int(x) for x in list(format(j, "#0{0}b".format(2 + n_inputs//2))[2:])]
+                input_a = int_to_bin_list(i, n_inputs//2)
+                input_b = int_to_bin_list(j, n_inputs//2)
                 inputs = input_a + input_b
                 circuit.set_inputs(inputs)
                 output_gates = circuit.execute()
@@ -83,8 +83,8 @@ class Error_functions:
         error = 0
         for i in range(2**(n_inputs//2)):
             for j in range(2**(n_inputs//2)):
-                input_a = [int(x) for x in list(format(i, "#0{0}b".format(2 + n_inputs//2))[2:])]
-                input_b = [int(x) for x in list(format(j, "#0{0}b".format(2 + n_inputs//2))[2:])]
+                input_a = int_to_bin_list(i, n_inputs//2)
+                input_b = int_to_bin_list(j, n_inputs//2)
                 inputs = input_a + input_b
                 circuit.set_inputs(inputs)
                 output_gates = circuit.execute()
@@ -107,8 +107,8 @@ class Error_functions:
         error = 0
         for i in range(2**(n_inputs//2)):
             for j in range(2**(n_inputs//2)):
-                input_a = [int(x) for x in list(format(i, "#0{0}b".format(2 + n_inputs//2))[2:])]
-                input_b = [int(x) for x in list(format(j, "#0{0}b".format(2 + n_inputs//2))[2:])]
+                input_a = int_to_bin_list(i, n_inputs//2)
+                input_b = int_to_bin_list(j, n_inputs//2)
                 inputs = input_a + input_b
                 circuit.set_inputs(inputs)
                 output_gates = circuit.execute()
@@ -126,8 +126,8 @@ class Error_functions:
         error = 0
         for i in range(2**(n_inputs//2)):
             for j in range(2**(n_inputs//2)):
-                input_a = [int(x) for x in list(format(i, "#0{0}b".format(2 + n_inputs//2))[2:])]
-                input_b = [int(x) for x in list(format(j, "#0{0}b".format(2 + n_inputs//2))[2:])]
+                input_a = int_to_bin_list(i, n_inputs//2)
+                input_b = int_to_bin_list(j, n_inputs//2)
                 inputs = input_a + input_b
                 circuit.set_inputs(inputs)
                 output_gates = circuit.execute()
@@ -221,3 +221,8 @@ def mutate(n_inputs, n_outputs, n_columns, n_rows, function_dict, chromosome, lm
     for i in range(rand):
         chromosomes.append(rand_chromosome_generator(n_inputs, n_outputs, n_columns, n_rows, function_dict))
     return chromosomes
+
+def int_to_bin_list(x, num_bits):
+    output = [1 if digit=='1' else 0 for digit in bin(x)[2:]]
+    output = (output + num_bits * [0])[:num_bits]
+    return output
