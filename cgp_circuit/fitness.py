@@ -2,39 +2,38 @@ from . import circuit as c
 import random
 import math
 import copy
+import itertools
 
 
 class Error_functions:
     def hamming_distance(self, n_inputs, n_outputs, n_columns, n_rows, function_dict, chromosome, true_func):
         circuit = c.Circuit(n_inputs, n_outputs, n_columns, n_rows, function_dict, chromosome)
         error = 0
-        for i in range(2**(n_inputs//2)):
-            for j in range(2**(n_inputs//2)):
-                input_a = int_to_bin_list(i, n_inputs//2)
-                input_b = int_to_bin_list(j, n_inputs//2)
-                inputs = input_a + input_b
-                circuit.set_inputs(inputs)
-                output_gates = circuit.execute()
-                true_outputs = list(map(int, list(format(true_func(i,j), "#0{0}b".format(2 + n_outputs))[2:])))
-                for k in range(n_outputs):
-                    error += true_outputs[k] ^ output_gates[k]
+        for [i,j] in get_sample(n_inputs):
+            input_a = int_to_bin_list(i, n_inputs//2)
+            input_b = int_to_bin_list(j, n_inputs//2)
+            inputs = input_a + input_b
+            circuit.set_inputs(inputs)
+            output_gates = circuit.execute()
+            true_outputs = list(map(int, list(format(true_func(i,j), "#0{0}b".format(2 + n_outputs))[2:])))
+            for k in range(n_outputs):
+                error += true_outputs[k] ^ output_gates[k]
         return error
 
     def num_error(self, n_inputs, n_outputs, n_columns, n_rows, function_dict, chromosome, true_func):
         circuit = c.Circuit(n_inputs, n_outputs, n_columns, n_rows, function_dict, chromosome)
         error = 0
-        for i in range(2**(n_inputs//2)):
-            for j in range(2**(n_inputs//2)):
-                input_a = int_to_bin_list(i, n_inputs//2)
-                input_b = int_to_bin_list(j, n_inputs//2)
-                inputs = input_a + input_b
-                circuit.set_inputs(inputs)
-                output_gates = circuit.execute()
-                output = 0
-                for k in range(n_outputs):
-                    output += output_gates[-k-1] * 2**k
-                if output != true_func(i, j):
-                    error += 1
+        for [i,j] in get_sample(n_inputs):
+            input_a = int_to_bin_list(i, n_inputs//2)
+            input_b = int_to_bin_list(j, n_inputs//2)
+            inputs = input_a + input_b
+            circuit.set_inputs(inputs)
+            output_gates = circuit.execute()
+            output = 0
+            for k in range(n_outputs):
+                output += output_gates[-k-1] * 2**k
+            if output != true_func(i, j):
+                error += 1
         return error
 
     def error_probability(self, n_inputs, n_outputs, n_columns, n_rows, function_dict, chromosome, true_func):
@@ -43,17 +42,16 @@ class Error_functions:
     def absolute_error(self, n_inputs, n_outputs, n_columns, n_rows, function_dict, chromosome, true_func):
         circuit = c.Circuit(n_inputs, n_outputs, n_columns, n_rows, function_dict, chromosome)
         error = 0
-        for i in range(2**(n_inputs//2)):
-            for j in range(2**(n_inputs//2)):
-                input_a = int_to_bin_list(i, n_inputs//2)
-                input_b = int_to_bin_list(j, n_inputs//2)
-                inputs = input_a + input_b
-                circuit.set_inputs(inputs)
-                output_gates = circuit.execute()
-                output = 0
-                for k in range(n_outputs):
-                    output += output_gates[-k-1] * 2**k
-                error += abs(true_func(i, j) - output)
+        for [i,j] in get_sample(n_inputs):
+            input_a = int_to_bin_list(i, n_inputs//2)
+            input_b = int_to_bin_list(j, n_inputs//2)
+            inputs = input_a + input_b
+            circuit.set_inputs(inputs)
+            output_gates = circuit.execute()
+            output = 0
+            for k in range(n_outputs):
+                output += output_gates[-k-1] * 2**k
+            error += abs(true_func(i, j) - output)
         return error
 
     def mean_absolute_error(self, n_inputs, n_outputs, n_columns, n_rows, function_dict, chromosome, true_func):
@@ -62,17 +60,16 @@ class Error_functions:
     def squared_error(self, n_inputs, n_outputs, n_columns, n_rows, function_dict, chromosome, true_func):
         circuit = c.Circuit(n_inputs, n_outputs, n_columns, n_rows, function_dict, chromosome)
         error = 0
-        for i in range(2**(n_inputs//2)):
-            for j in range(2**(n_inputs//2)):
-                input_a = int_to_bin_list(i, n_inputs//2)
-                input_b = int_to_bin_list(j, n_inputs//2)
-                inputs = input_a + input_b
-                circuit.set_inputs(inputs)
-                output_gates = circuit.execute()
-                output = 0
-                for k in range(n_outputs):
-                    output += output_gates[-k-1] * 2**k
-                error += (true_func(i, j) - output)**2
+        for [i,j] in get_sample(n_inputs):
+            input_a = int_to_bin_list(i, n_inputs//2)
+            input_b = int_to_bin_list(j, n_inputs//2)
+            inputs = input_a + input_b
+            circuit.set_inputs(inputs)
+            output_gates = circuit.execute()
+            output = 0
+            for k in range(n_outputs):
+                output += output_gates[-k-1] * 2**k
+            error += (true_func(i, j) - output)**2
         return error
 
     def mean_squared_error(self, n_inputs, n_outputs, n_columns, n_rows, function_dict, chromosome, true_func):
@@ -81,22 +78,21 @@ class Error_functions:
     def relative_error(self, n_inputs, n_outputs, n_columns, n_rows, function_dict, chromosome, true_func):
         circuit = c.Circuit(n_inputs, n_outputs, n_columns, n_rows, function_dict, chromosome)
         error = 0
-        for i in range(2**(n_inputs//2)):
-            for j in range(2**(n_inputs//2)):
-                input_a = int_to_bin_list(i, n_inputs//2)
-                input_b = int_to_bin_list(j, n_inputs//2)
-                inputs = input_a + input_b
-                circuit.set_inputs(inputs)
-                output_gates = circuit.execute()
-                output = 0
-                true_output = true_func(i, j)
-                for k in range(n_outputs):
-                    output += output_gates[-k-1] * 2**k
-                this_error = abs(true_output - output)
-                if true_output > 1:
-                    error += this_error / true_output
-                else:
-                    error += this_error
+        for [i,j] in get_sample(n_inputs):
+            input_a = int_to_bin_list(i, n_inputs//2)
+            input_b = int_to_bin_list(j, n_inputs//2)
+            inputs = input_a + input_b
+            circuit.set_inputs(inputs)
+            output_gates = circuit.execute()
+            output = 0
+            true_output = true_func(i, j)
+            for k in range(n_outputs):
+                output += output_gates[-k-1] * 2**k
+            this_error = abs(true_output - output)
+            if true_output > 1:
+                error += this_error / true_output
+            else:
+                error += this_error
         return error
 
     def mean_relative_error(self, n_inputs, n_outputs, n_columns, n_rows, function_dict, chromosome, true_func):
@@ -105,41 +101,39 @@ class Error_functions:
     def worst_case_error(self, n_inputs, n_outputs, n_columns, n_rows, function_dict, chromosome, true_func):
         circuit = c.Circuit(n_inputs, n_outputs, n_columns, n_rows, function_dict, chromosome)
         error = 0
-        for i in range(2**(n_inputs//2)):
-            for j in range(2**(n_inputs//2)):
-                input_a = int_to_bin_list(i, n_inputs//2)
-                input_b = int_to_bin_list(j, n_inputs//2)
-                inputs = input_a + input_b
-                circuit.set_inputs(inputs)
-                output_gates = circuit.execute()
-                output = 0
-                true_output = true_func(i, j)
-                for k in range(n_outputs):
-                    output += output_gates[-k-1] * 2**k
-                this_error = abs(true_output - output)
-                if this_error > error:
-                    error = this_error
+        for [i,j] in get_sample(n_inputs):
+            input_a = int_to_bin_list(i, n_inputs//2)
+            input_b = int_to_bin_list(j, n_inputs//2)
+            inputs = input_a + input_b
+            circuit.set_inputs(inputs)
+            output_gates = circuit.execute()
+            output = 0
+            true_output = true_func(i, j)
+            for k in range(n_outputs):
+                output += output_gates[-k-1] * 2**k
+            this_error = abs(true_output - output)
+            if this_error > error:
+                error = this_error
         return error
 
     def worst_case_relative_error(self, n_inputs, n_outputs, n_columns, n_rows, function_dict, chromosome, true_func):
         circuit = c.Circuit(n_inputs, n_outputs, n_columns, n_rows, function_dict, chromosome)
         error = 0
-        for i in range(2**(n_inputs//2)):
-            for j in range(2**(n_inputs//2)):
-                input_a = int_to_bin_list(i, n_inputs//2)
-                input_b = int_to_bin_list(j, n_inputs//2)
-                inputs = input_a + input_b
-                circuit.set_inputs(inputs)
-                output_gates = circuit.execute()
-                output = 0
-                true_output = true_func(i, j)
-                for k in range(n_outputs):
-                    output += output_gates[-k-1] * 2**k
-                this_error = abs(true_output - output)
-                if true_output > 1:
-                    this_error /= true_output
-                if this_error > error:
-                    error = this_error
+        for [i,j] in get_sample(n_inputs):
+            input_a = int_to_bin_list(i, n_inputs//2)
+            input_b = int_to_bin_list(j, n_inputs//2)
+            inputs = input_a + input_b
+            circuit.set_inputs(inputs)
+            output_gates = circuit.execute()
+            output = 0
+            true_output = true_func(i, j)
+            for k in range(n_outputs):
+                output += output_gates[-k-1] * 2**k
+            this_error = abs(true_output - output)
+            if true_output > 1:
+                this_error /= true_output
+            if this_error > error:
+                error = this_error
 
     def __init__(self):
         self.error_functions = {
@@ -226,3 +220,9 @@ def int_to_bin_list(x, num_bits):
     output = [1 if digit=='1' else 0 for digit in bin(x)[2:]]
     output = (output + num_bits * [0])[:num_bits]
     return output
+
+def get_sample(n_inputs):
+    if n_inputs > 8:
+        return zip(random.choices(range(2**(n_inputs//2)), k=2**8),random.choices(range(2**(n_inputs//2)), k=2**8))
+    else:
+        return itertools.product(range(2**(n_inputs//2)), repeat=2)
