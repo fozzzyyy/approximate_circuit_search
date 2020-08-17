@@ -222,16 +222,14 @@ def rand_chromosome_generator(n_inputs, n_outputs, n_columns, n_rows, function_d
     chromosome += random.sample(range(len(chromosome)), n_outputs)
     return chromosome
 
-def choose_best(n_inputs, n_outputs, n_columns, n_rows, function_dict, chromosomes, error_function, true_func):
+def choose_best(solutions, error_function):
     best_weight = math.inf
-    for chromosome in chromosomes:
-        t0 = time()
-        weight = error_function([n_inputs, n_outputs, n_columns, n_rows, function_dict, chromosome, true_func])
-        print(time() - t0)
+    for solution in solutions:
+        weight = error_function(solution)
         if weight <= best_weight:
-            best_chromosome = copy.deepcopy(chromosome)
+            best_solution = copy.deepcopy(solution)
             best_weight = weight
-    return [best_chromosome, best_weight]
+    return [best_solution, best_weight]
 
 def get_phenotype(circuit_def):
     n_inputs = circuit_def[0]
@@ -292,16 +290,22 @@ def mutate(circuit_def):
     return [n_inputs, n_outputs, n_columns, n_rows, function_dict, new_chromosome, true_func]
 
 def mutate_into_list(circuit_def, lmbda, rand):
+    n_inputs = circuit_def[0]
+    n_outputs = circuit_def[1]
+    n_columns = circuit_def[2]
+    n_rows = circuit_def[3]
+    function_dict = circuit_def[4]
     chromosome = circuit_def[5]
+    true_func = circuit_def[6]
+    
+    solutions = [circuit_def]
 
-    chromsomes = [chromosome]
-
-    for i in range(lmdba):
-        chromsomes.append(mutate(circuit_def))
+    for i in range(lmbda):
+        solutions.append(mutate(circuit_def))
     
     for i in range(rand):
-        chromosomes.append(rand_chromosome_generator(n_inputs, n_outputs, n_columns, n_rows, function_dict))
-    return chromosomes
+        solutions.append(circuit_def[:5] + rand_chromosome_generator(n_inputs, n_outputs, n_columns, n_rows, function_dict) + circuit_def[6:])
+    return solutions
 
 def int_to_bin_list(x, num_bits):
     output = [1 if digit=='1' else 0 for digit in bin(x)[2:]]

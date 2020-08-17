@@ -1,4 +1,4 @@
-import cgp_circuit.circuit as c
+import circuit_search.circuit_as_obj as c
 
 
 def main():
