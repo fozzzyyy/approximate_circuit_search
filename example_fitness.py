@@ -61,7 +61,7 @@ def main():
     solutions = [[n_inputs, n_outputs, n_columns, n_rows, function_dict, chromosome, true_func] for chromosome in chromosomes]
     for i in range(100):
         best_solution = f.choose_best(solutions, e_f)[0]
-        solution = f.mutate_into_list(best_solution, lmbda, rand)
+        solutions = f.mutate_into_list(best_solution, lmbda, rand)
         
     print(best_solution[5])
     print(str(c_o.Circuit(n_inputs, n_outputs, n_columns, n_rows, function_dict, best_solution[5])))

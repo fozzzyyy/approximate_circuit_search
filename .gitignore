@@ -1,4 +1,6 @@
 __pycache__
 test_circuit.py
 test_fitness.py
+test_NSGA_II.py
 *.txt
+*.svg

@@ -304,7 +304,8 @@ def mutate_into_list(circuit_def, lmbda, rand):
         solutions.append(mutate(circuit_def))
     
     for i in range(rand):
-        solutions.append(circuit_def[:5] + rand_chromosome_generator(n_inputs, n_outputs, n_columns, n_rows, function_dict) + circuit_def[6:])
+        solutions.append(circuit_def[:5] + [rand_chromosome_generator(n_inputs, n_outputs, n_columns, n_rows, function_dict)] + circuit_def[6:])
+    
     return solutions
 
 def int_to_bin_list(x, num_bits):
