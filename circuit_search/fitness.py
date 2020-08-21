@@ -152,6 +152,7 @@ class Error_functions:
                 this_error /= true_output
             if this_error > error:
                 error = this_error
+        return error
 
     def power(self, circuit_def):
         n_inputs = circuit_def[0]
