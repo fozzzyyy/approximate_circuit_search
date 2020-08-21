@@ -31,21 +31,6 @@ def chrom_to_func_string(chromosome, n_inputs, n_outputs):
     for i in range(n_inputs//2):
         func_string += "    w_{0} = (b >> {1}) & 0x01\n".format(n_inputs//2 + i, n_inputs//2 - i - 1)
 
-    # Slightly slower method of assigning input bits
-    """func_string += ("    a_list = [1 if digit=='1' else 0 for digit in bin(a)[2:]]\n"
-                    "    a_list = ({0} * [0] + a_list)[-{0}:]\n"
-                    "    b_list = [1 if digit=='1' else 0 for digit in bin(b)[2:]]\n"
-                    "    b_list = ({0} * [0] + b_list)[-{0}:]\n"
-                    ).format(n_inputs//2)
-    a_list_string = "    ["
-    b_list_string = "    ["
-    for i in range(n_inputs//2):
-        a_list_string += "w_{0},".format(i)
-        b_list_string += "w_{0},".format(i + n_inputs//2)
-    a_list_string = a_list_string[:-1] + "] = a_list\n"
-    b_list_string = b_list_string[:-1] + "] = b_list\n"
-    func_string += a_list_string + b_list_string"""
-
     # Perform each logical operation
     for i in range(len(main_chromosome)):
         func_string += "    w_{0} = {1}\n".format(n_inputs + i, func_dict[main_chromosome[i][-1]]).format(*main_chromosome[i][:-1])
@@ -66,12 +51,6 @@ def function_namer(chromosome, n_inputs, n_outputs):
     main_chromosome = chromosome[:-n_outputs]
     output_list = chromosome[-n_outputs:]
     return 'circuit_' + '_'.join([''.join(map(str,i)) for i in main_chromosome]) + '_' + '_'.join(map(str, output_list))
-
-"""def chrom_to_func(chromosome, n_inputs, n_outputs):
-    chrom_to_file(chromosome, n_inputs, n_outputs)
-    import temp_circuit_file
-    importlib.reload(temp_circuit_file)
-    return temp_circuit_file.circuit_function"""
 
 def chrom_to_func(chromosome, n_inputs, n_outputs):
     exec(chrom_to_func_string(chromosome, n_inputs, n_outputs))

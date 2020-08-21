@@ -228,17 +228,6 @@ def rand_chromosome_generator(n_inputs, n_outputs, n_columns, n_rows, function_d
     chromosome = []
     for column in range(n_columns):
         for row in range(n_rows):
-            """gate = []
-            func = random.choice(list(function_dict.function_dict.keys()))
-            k = 2
-            if "3" in func:
-                k = 3
-            if func == "NOT":
-                k = 1
-            for i in range(k):
-                gate.append(random.randrange(0,n_inputs + (n_rows*column)))
-            gate.append(func)
-            chromosome.append(gate)"""
             chromosome.append(rand_gate_generator(n_inputs + (n_rows*column), function_dict))
     chromosome += random.sample(range(len(chromosome)), n_outputs)
     return chromosome
@@ -298,30 +287,7 @@ def mutate(circuit_def):
 
     new_chromosome = copy.deepcopy(chromosome)
 
-    """# Change 3 genes in each chromosome
-    #for j in range(3):
-    for j in range((len(chromosome)*len(chromosome[0])) // 20):
-        # Choose a random gate/output that is in the phenotype of the chromosome
-        i = random.randrange(len(phenotype) + n_outputs)
-        # If we choose a gate
-        if i < len(phenotype):
-            gate_chromosome = new_chromosome[phenotype[i] - n_inputs]
-            max_column = (phenotype[i] - n_inputs) // n_rows
-            # Choose between all entries in the gate chromosome
-            k = random.randrange(len(gate_chromosome))
-            # If not the function
-            if k != len(gate_chromosome) - 1:
-                # Change input connection to some gate in a previous column
-                gate_chromosome[k] = random.randrange(n_inputs + max_column * n_rows)
-            # If the function is chosen
-            else:
-                # Change gate function to something from the function dictionary
-                gate_chromosome[k] = random.choice(list(function_dict.function_dict.keys()))
-        else:
-            k = random.randrange(len(chromosome) - n_outputs, len(chromosome))
-            new_chromosome[k] = random.randrange(n_inputs + len(chromosome) - n_outputs)
-    """
-
+    # Change 3 genes in the chromosome
     genes_to_change = random.sample(range(len(new_chromosome)), k=3)
     for i in genes_to_change:
         if i < n_rows*n_columns:
