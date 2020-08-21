@@ -179,7 +179,7 @@ class Error_functions:
         }
         
         phenotype = get_phenotype(circuit_def)
-        return sum([power_dict[chromosome[gate-n_inputs][2]] for gate in phenotype])
+        return sum([power_dict[chromosome[gate-n_inputs][-1]] for gate in phenotype])
 
     def area(self, circuit_def):
         n_inputs = circuit_def[0]
@@ -208,7 +208,7 @@ class Error_functions:
         
         phenotype = get_phenotype(circuit_def)
 
-        return sum([area_dict[chromosome[gate-n_inputs][2]] for gate in phenotype])
+        return sum([area_dict[chromosome[gate-n_inputs][-1]] for gate in phenotype])
 
     def __init__(self):
         self.error_functions = {
