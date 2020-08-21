@@ -26,16 +26,41 @@ class Function_dict:
     def XNOR(x):
         return int(x[0] == x[1])
 
-    def ANDONENEG(x):
-        return int(x[0] and not x[1])
+    def NOT(x):
+        return ~x[0]
+
+    def AND3(x):
+        return x[0] & x[1] & x[2]
+
+    def OR3(x):
+        return x[0] | x[1] | x[2]
+
+    def NAND3(x):
+        return ~(x[0] & x[1] & x[2])
+
+    def NOR3(x):
+        return ~(x[0] | x[1] | x[2])
+
+    def XOR3(x):
+        return x[0] ^ x[1] ^ x[2]
+
+    def XNOR3(x):
+        return ~(x[0] ^ x[1] ^ x[2])
 
     function_dict = {
         "AND" : AND,
         "OR"  : OR,
         "XOR" : XOR,
-        # "NAND;": NAND,
-        # "NOR;" : NOR,
-        # "XNOR;": XNOR
+        "NAND": NAND,
+        "NOR" : NOR,
+        "XNOR": XNOR,
+        "NOT" : NOT,
+        "AND3" : AND3,
+        "OR3"  : OR3,
+        "XOR3" : XOR3,
+        "NAND3": NAND3,
+        "NOR3" : NOR3,
+        "XNOR3": XNOR3       
     }
 
 

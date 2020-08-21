@@ -7,8 +7,15 @@ func_dict = {
     "XOR" : "w_{0} ^ w_{1}",
     "NAND" : "~(w_{0} & w_{1})",
     "NOR" : "~(w_{0} & w_{1})",
-    "XNOR" : "~(w_{0} & w_{1})"
-    }
+    "XNOR" : "~(w_{0} & w_{1})",
+    "NOT" : "~w_{0}",
+    "AND3" : "w_{0} & w_{1} & w_{2}",
+    "OR3" : "w_{0} | w_{1} | w_{2}",
+    "XOR3" : "w_{0} ^ w_{1} ^ w_{2}",
+    "NAND3" : "~(w_{0} & w_{1} & w_{2})",
+    "NOR3" : "~(w_{0} | w_{1} | w_{2})",
+    "XNOR3" : "~(w_{0} ^ w_{1} ^ w_{2})",
+}
 
 def chrom_to_func_string(chromosome, n_inputs, n_outputs):
     main_chromosome = chromosome[:-n_outputs]
@@ -41,7 +48,7 @@ def chrom_to_func_string(chromosome, n_inputs, n_outputs):
 
     # Perform each logical operation
     for i in range(len(main_chromosome)):
-        func_string += "    w_{0} = {1}\n".format(n_inputs + i, func_dict[main_chromosome[i][2]]).format(main_chromosome[i][0], main_chromosome[i][1])
+        func_string += "    w_{0} = {1}\n".format(n_inputs + i, func_dict[main_chromosome[i][-1]]).format(*main_chromosome[i][:-1])
 
     # Calculate and return output
     func_string += "    y = 0\n"

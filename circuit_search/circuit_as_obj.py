@@ -38,7 +38,7 @@ class Gate:
         return str(self)
 
     def __str__(self):
-        return str(self.position) + " = [" + str(self.input_gates[0].position) + " " + str(self.function.__name__) + " " + str(self.input_gates[1].position) + "]"
+        return str(self.position) + " = " + str(self.function.__name__) + "(" + str([i.position for i in self.input_gates]) + ")"
 
     """
     Will calculate and set the output of the gate

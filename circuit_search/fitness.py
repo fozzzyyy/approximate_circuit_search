@@ -168,7 +168,14 @@ class Error_functions:
             "XOR" : 161,
             "NAND" : 39,
             "NOR" : 35,
-            "XNOR" : 161
+            "XNOR" : 161,
+            "NOT" : 22,
+            "AND3" : 52,
+            "OR3" : 48,
+            "XOR3" : 56,
+            "NAND3" : 56,
+            "NOR3" : 55,
+            "XNOR3" : 161
         }
         
         phenotype = get_phenotype(circuit_def)
@@ -189,7 +196,14 @@ class Error_functions:
             "XOR" : 56,
             "NAND" : 24,
             "NOR" : 24,
-            "XNOR" : 56
+            "XNOR" : 56,
+            "NOT" : 16,
+            "AND3" : 32,
+            "OR3" : 23,
+            "XOR3" : 56,
+            "NAND3" : 36,
+            "NOR3" : 64,
+            "XNOR3" : 56
         }
         
         phenotype = get_phenotype(circuit_def)
@@ -214,13 +228,33 @@ def rand_chromosome_generator(n_inputs, n_outputs, n_columns, n_rows, function_d
     chromosome = []
     for column in range(n_columns):
         for row in range(n_rows):
-            gate = []
-            gate.append(random.randrange(0,n_inputs + (n_rows*column)))
-            gate.append(random.randrange(0,n_inputs + (n_rows*column)))
-            gate.append(random.choice(list(function_dict.function_dict.keys())))
-            chromosome.append(gate)
+            """gate = []
+            func = random.choice(list(function_dict.function_dict.keys()))
+            k = 2
+            if "3" in func:
+                k = 3
+            if func == "NOT":
+                k = 1
+            for i in range(k):
+                gate.append(random.randrange(0,n_inputs + (n_rows*column)))
+            gate.append(func)
+            chromosome.append(gate)"""
+            chromosome.append(rand_gate_generator(n_inputs + (n_rows*column), function_dict))
     chromosome += random.sample(range(len(chromosome)), n_outputs)
     return chromosome
+
+def rand_gate_generator(position, function_dict):
+    gate = []
+    func = random.choice(list(function_dict.function_dict.keys()))
+    k = 2
+    if "3" in func:
+        k = 3
+    elif func == "NOT":
+        k = 1
+    for i in range(k):
+        gate.append(random.randrange(0,position))
+    gate.append(func)
+    return gate
 
 def choose_best(solutions, error_function):
     best_weight = math.inf
@@ -264,7 +298,7 @@ def mutate(circuit_def):
 
     new_chromosome = copy.deepcopy(chromosome)
 
-    # Change 3 values in each chromosome
+    """# Change 3 genes in each chromosome
     #for j in range(3):
     for j in range((len(chromosome)*len(chromosome[0])) // 20):
         # Choose a random gate/output that is in the phenotype of the chromosome
@@ -286,7 +320,15 @@ def mutate(circuit_def):
         else:
             k = random.randrange(len(chromosome) - n_outputs, len(chromosome))
             new_chromosome[k] = random.randrange(n_inputs + len(chromosome) - n_outputs)
+    """
 
+    genes_to_change = random.sample(range(len(new_chromosome)), k=3)
+    for i in genes_to_change:
+        if i < n_rows*n_columns:
+            new_chromosome[i] = rand_gate_generator(i + n_inputs, function_dict)
+        else:
+            new_chromosome[i] = random.randrange(n_inputs + n_rows*n_columns)
+    
     return [n_inputs, n_outputs, n_columns, n_rows, function_dict, new_chromosome, true_func]
 
 def mutate_into_list(circuit_def, lmbda, rand):
