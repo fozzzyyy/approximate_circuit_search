@@ -1,4 +1,4 @@
-# CGP-circuits
+# approximate_circuit_search
 
 The purpose of this repository is to allow the user to construct circuits out of logical gates, and to get the output of these circuits whenever they are passed a given set of inputs.
 
@@ -11,7 +11,7 @@ We can represent a given circuit using a chromosome:
 Z. Vasicek and L. Sekanina, "Evolutionary Approach to Approximate Digital Circuits Design" in IEEE Transactions on Evolutionary Computation, vol. 19, no. 3, pp. 432-444, June 2015. doi: [10.1109/TEVC.2014.2336175](https://dx.doi.org/10.1109/TEVC.2014.2336175)
 (pages 435-436)
 
-## Circuit.py
+## circuit_as_obj.py
 
 This file takes defines the Gate and Circuit classes.
 
