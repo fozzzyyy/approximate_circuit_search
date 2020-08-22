@@ -1,8 +1,7 @@
 import math
 import random
 
-known_solutions = []
-known_fitness = []
+known_solutions = {}
 
 def fitness_lists_generator(solutions, fitness_functions):
     fitness_lists = []
@@ -17,11 +16,10 @@ def fitness_lists_generator(solutions, fitness_functions):
 
 def get_fitness(solution, fitness_functions, i):
     try:
-        return known_fitness[known_solutions.index(solution)][i]
+        return known_solutions[str(solution)][i]
     except:
         x = [fitness_function(solution) for fitness_function in fitness_functions]
-        known_solutions.append(solution)
-        known_fitness.append(x)
+        known_solutions[str(solution)] = x
         return x[i]        
 
 def fast_non_dominated_sort(solutions, fitness_lists):
