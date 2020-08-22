@@ -152,6 +152,7 @@ class Error_functions:
                 this_error /= true_output
             if this_error > error:
                 error = this_error
+                print(i, output)
         return error
 
     def power(self, circuit_def):
@@ -173,8 +174,8 @@ class Error_functions:
             "NOT" : 22,
             "AND3" : 52,
             "OR3" : 48,
-            "XOR3" : 56,
-            "NAND3" : 56,
+            "XOR3" : 112,
+            "NAND3" : 48,
             "NOR3" : 55,
             "XNOR3" : 161
         }
