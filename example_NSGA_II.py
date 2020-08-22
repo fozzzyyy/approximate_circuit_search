@@ -13,21 +13,46 @@ import matplotlib.pyplot as plt
 def true_func(a, b):
     return a + b
 
+
 class Function_dict:
     def AND(x):
-        return x[0] & x[1]
+        return int(x[0] and x[1])
+
     def OR(x):
-        return x[0] | x[1]
+        return int(x[0] or x[1])
+
     def NAND(x):
-        return ~(x[0] & x[1])
+        return int(not x[0] and x[1])
+
     def NOR(x):
         return int(not x[0] or x[1])
+
     def XOR(x):
-        return x[0] ^ x[1]
+        return int(x[0] != x[1])
+
     def XNOR(x):
         return int(x[0] == x[1])
-    def ANDONENEG(x):
-        return int(x[0] and not x[1])
+
+    def NOT(x):
+        return ~x[0]
+
+    def AND3(x):
+        return x[0] & x[1] & x[2]
+
+    def OR3(x):
+        return x[0] | x[1] | x[2]
+
+    def NAND3(x):
+        return ~(x[0] & x[1] & x[2])
+
+    def NOR3(x):
+        return ~(x[0] | x[1] | x[2])
+
+    def XOR3(x):
+        return x[0] ^ x[1] ^ x[2]
+
+    def XNOR3(x):
+        return ~(x[0] ^ x[1] ^ x[2])
 
     function_dict = {
         "AND" : AND,
@@ -35,7 +60,14 @@ class Function_dict:
         "XOR" : XOR,
         "NAND": NAND,
         "NOR" : NOR,
-        "XNOR": XNOR
+        "XNOR": XNOR,
+        "NOT" : NOT,
+        "AND3" : AND3,
+        "OR3"  : OR3,
+        "XOR3" : XOR3,
+        "NAND3": NAND3,
+        "NOR3" : NOR3,
+        "XNOR3": XNOR3       
     }
 
 def crossover(chromosome_1, chromosome_2):
