@@ -13,9 +13,13 @@ Z. Vasicek and L. Sekanina, "Evolutionary Approach to Approximate Digital Circui
 
 ## circuit_as_obj.py
 
-This file takes defines the Gate and Circuit classes.
+This file implements circuits by defining a Circuit object that is made up of several Gate objects. Each Gate takes in other Gates as inputs, then sets its output according to the function it was assigned at initialisation.
 
-### Circuit parameters
+## circuit_as_func.py
+
+This file implements circuits in a different way, by converting a chromosome into a python function made up of bitwise operations. Currently this only supports certain built in operations, but I intend to allow users to pass their own operations similar to function_dict in circuit_as_obj.py
+
+## Circuit parameters
 
 * n_inputs: the number of input Gates in the Circuit, often referred to in literature as n_i
 * n_outputs: the number of outputs that will be returned after executing the gate, often referred to in literature as n_o
@@ -26,9 +30,9 @@ This file takes defines the Gate and Circuit classes.
 
 Note that the total number of Gates in the Circuit will be n_inputs + (n_columns \* n_rows).
 
-#### function_dict
+### function_dict
 
-Circuit.py contains an example of the Function_dict class.
+example_circuit.py contains an example of the Function_dict class.
 
 Each function takes a list of inputs as its parameters, and returns some value.
 
@@ -38,7 +42,7 @@ Note: this dictionary **must** be named self.function_dict
 
 In the body of your program, create an object of this class and pass it to the Circuit constructor
 
-#### chromosome
+### chromosome
 
 The valid format for a chromosome is:
 
@@ -54,3 +58,24 @@ In order for Circuits to execute correctly, Gates can only take as inputs Gates 
 o_1, ..., o_n denote the positions of the Gates that will be used as the outputs for the Circuit.
 Note that these are read in order from Most Significant Bit to Least Significant Bit.
 
+## fitness.py
+
+The list [n_inputs, n_outputs, n_columns, n_rows, function_dict, chromosome, true_func] is called the circuit defintion, or circuit_def.
+This file contains various fitness functions, each of which take a circuit definition as their only argument.
+Additionally, this file contains functions that generate random chromosomes (rand_chromosome_generator), get the phenotype of a chromosome, and mutate a chromosome (mutate).
+
+## NSGA_II.py
+
+Implements the NSGA-II algorithm.
+Designed to be portable, and does not depend on any other files in this project.
+The only function that a user needs to call in their project is next_generation.
+The user must have:
+* A list of solutions from the previous generation that aim to solve for the user's objectives
+* A list of fitness functions that represent these objectives, which take in elements of the previous generation and return a sortable value
+* A crossover function, which takes in two solutions and combines them in some way to return a single solution
+* A mutate function, which takes in a single solution and returns another solution, which should be similar to the input
+
+## Exact adder generators
+
+I have included two scripts that generate the chromosome for an n-bit ripple carry exact adder.
+One script sets n_rows=2, while the other sets n_rows=3.
